@@ -23,6 +23,29 @@ func (s Set) Delete(key interface{}) { // 集合から値を削除
 	}
 }
 
+func (s1 Set) Union(s2 interface{}) *Set {
+	nS := NewSet()
+
+	for k, _ := range s1 {
+		nS.Add(k)
+	}
+	switch s := s2.(type) {
+	case *Set:
+		for k, _ := range *s {
+			nS.Add(k)
+		}
+	case []*Set:
+		for _, _s := range s {
+			for k, _ := range *_s {
+				nS.Add(k)
+			}
+		}
+	default:
+		return NewSet()
+	}
+	return nS
+}
+
 func ReverseText(text string) string {
 	var newText string
 	for i := len(text) - 1; i >= 0; i-- {
@@ -85,30 +108,31 @@ func main() {
 
 	// p6
 	fmt.Println("p6")
-	set1 := NewSet()
 	x := Ngram("paraparaparadise", 2)
 	y := Ngram("paragraph", 2)
-	fmt.Println(x)
-	fmt.Println(y)
+	xs := NewSet()
+	ys := NewSet()
 	for _, k := range x {
-		set1.Add(k)
+		xs.Add(k)
 	}
 	for _, k := range y {
-		set1.Add(k)
+		ys.Add(k)
 	}
-	fmt.Println("和集合: ", set1)
-	set2 := NewSet()
-	for _, k := range x {
-		set2.Add(k)
-	}
-	for _, k := range y {
-		set2.Delete(k)
-	}
-	fmt.Println("差集合: ", set2)
-	for k, _ := range *set2 {
-		set1.Delete(k)
-	}
-	fmt.Println("積集合: ", set1)
+	fmt.Println(xs)
+	fmt.Println(ys)
+	fmt.Println("和集合: ", xs.Union(ys))
+	// set2 := NewSet()
+	// for _, k := range x {
+	// 	set2.Add(k)
+	// }
+	// for _, k := range y {
+	// 	set2.Delete(k)
+	// }
+	// fmt.Println("差集合: ", set2)
+	// for k, _ := range *set2 {
+	// 	set1.Delete(k)
+	// }
+	// fmt.Println("積集合: ", set1)
 
 	// p7
 	fmt.Println("p7")
